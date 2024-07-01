@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_file , redirect , url_for
+from flask import Flask, render_template, request, jsonify, send_file
 from io import BytesIO
 import pandas as pd
 from reportlab.lib.pagesizes import A4
@@ -7,34 +7,13 @@ import model3
 
 app = Flask(__name__)
 
-
-
-ALLOWED_EXTENSIONS = set(['csv'])
-
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.',1)[i].lower() in ALLOWED_EXTENSIONS
-        
-        
-
-
-
-
-@app.route('/upload',methods=['GET','POST'])
-def upload():
-    
-  #  if request.method =='POST':
-   ##    if file and allowed_file(file):
-            
-        
-    
-    return render_template('upload.html')
-
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/lofi')
+def lofi():
+    return render_template('lofi.html')
 
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
@@ -42,40 +21,34 @@ def analyze():
         # Get user input (load data) from the form
         load_data_file = request.files['load_data']
         load_data_df = pd.read_csv(load_data_file)
-        
 
         # Create an instance of System_Builder with user input
         plant_name = request.form['plant_name']
         battery_hours = int(request.form['battery_hours'])
         distance = int(request.form['distance'])
-         
+        #plant = model3.System_Builder()
         plant = model3.System_Builder(load_data_df, plant_name, battery_hours, distance)
 
         # Call analysis methods
         #plant.plant_eval_data_cleanup()
         #plant.get_key_metrics()
         # ... other analysis methods (optional)
+        plant.plant_eval_tester()
 
         # Prepare data for the response
-        
         key_metrics = {
             # Extract key metrics from plant object
-            'max_power': plant.get_max_power(),
+            'max_power': model3.Plant_Eval().get_max_power(),
             # ... other key metrics
         }
-        
-        
-        #plant.Quote_printOut()
-        
-        
+
         return render_template('analysis_result.html', key_metrics=key_metrics)
     else:
         return render_template('analyze.html')
 
 @app.route('/analysis_result')
 def analysis_result():
-    if request.method == 'POST':
-        return render_template('analysis_result.html')
+    return render_template('analysis_result.html')
 
 @app.route('/generate_quote', methods=['POST'])
 def generate_quote():
