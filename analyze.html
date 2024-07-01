@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar PV and BESS Quote Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Plant Analysis</title>
+</head>
+<body>
+    <h1>Plant Analysis</h1>
+    <form method="post" enctype="multipart/form-data">
+        <label for="load_data">Load Data CSV:</label>
+        <input type="file" name="load_data" id="load_data" required><br>
+        <label for="plant_name">Plant Name:</label>
+        <input type="text" name="plant_name" id="plant_name" required><br>
+        <label for="battery_hours">Battery Hours:</label>
+        <input type="number" name="battery_hours" id="battery_hours" min="1" required><br>
+        <label for="distance">Distance (km):</label>
+        <input type="number" name="distance" id="distance" min="0" required><br>
+        <input type="submit" value="Analyze">
+    </form>
+</body>
+</html>

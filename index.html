@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar PV and BESS Quote Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Solar PV and BESS Quote Generator</h1>
+        <form id="quoteForm">
+            <label for="peakLoad">Peak Load (kW):</label>
+            <input type="number" id="peakLoad" name="peakLoad" required>
+
+            <button type="submit">Generate Quote</button>
+        </form>
+        <div id="quoteResult">
+            <!-- Quote table will be inserted here -->
+        </div>
+        <a id="downloadLink" style="display: none;">Download Quote PDF</a>
+    </div>
+    <script>
+        document.getElementById('quoteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('/generate_quote', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('quoteResult').textContent = `Estimated Quote: ${data.estimated_quote} - PV Size: ${data.pv_size} kW - BESS Size: ${data.bess_size} kWh`;
+                // Constructing the table for displaying the quote
+       
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = data.pdf_url;
+                downloadLink.style.display = 'block';
+                downloadLink.textContent = 'Download Quote PDF';
+            })
+            .catch(error => {
+                document.getElementById('quoteResult').textContent = "Error generating quote.";
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

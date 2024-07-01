@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar PV and BESS Quote Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Plant Analysis Result</title>
+</head>
+<body>
+    <h1>Plant Analysis Result for {{ key_metrics['plant_name'] }}</h1>
+    <p>Maximum Power Consumption: {{ key_metrics['max_power'] }} kW</p>
+    <a href="/">Go Back</a>
+</body>
+</html>
